@@ -1,0 +1,28 @@
+use Test;
+use Cro::APIToken::Store;
+use Cro::APIToken::Token;
+use Cro::APIToken::Manager;
+use lib 't/lib';
+use MemoryStore;
+
+dies-ok { Cro::APIToken::Manager.create-token }, 'Cannot create a token without expiration time specified';
+
+my $manager = Cro::APIToken::Manager.new(store => MemoryStore.new);
+
+my $token = $manager.create-token(:metadata{ user-id => 2 }, lifetime => Duration.new(60));
+
+nok $token.revoked, "Fresh token is not revoked";
+ok $token, "Bool conversion works";
+$token.revoke;
+ok $token.revoked, "Token is revoked";
+nok $token, "Bool conversion works (2)";
+
+fails-like({ $manager.resolve-token($token.token) }, X::AdHoc);
+
+lives-ok { $manager.resolve-token($token.token, :invalid) }, "The :invalid flag returns revoked tokens";
+
+$manager = Cro::APIToken::Manager.new(store => MemoryStore.new, prefix => 'prefix', :checksum);
+
+lives-ok { $manager.create-token(:metadata{ user-id => 2 }, lifetime => Duration.new(60)) }, 'can create a token with a prefix and a checksum';
+
+done-testing;

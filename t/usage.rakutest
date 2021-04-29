@@ -1,0 +1,96 @@
+use Cro::APIToken::Middleware;
+use Cro::HTTP::Auth;
+use Cro::HTTP::Client;
+use Cro::HTTP::Server;
+use Cro::HTTP::Router;
+use lib 't/lib';
+use MemoryStore;
+use Test;
+
+my &routes;
+constant HTTP_TEST_PORT = 31326;
+
+class APIUser does Cro::HTTP::Auth {
+    has Int $.user-id;
+    has Str @.roles;
+    method has-role(Str $role) {
+        $role ∈ @!roles
+    }
+}
+
+class TestAPIMiddleware does Cro::APIToken::Middleware {
+    method on-valid(Cro::HTTP::Request $request, Cro::APIToken::Token $token --> Cro::HTTP::Message) {
+        given $token.metadata {
+            $request.auth = APIUser.new(user-id => .<user>, roles => .<roles>);
+        }
+        $request;
+    }
+}
+
+subset Viewer of APIUser where .has-role('viewer');
+subset Editor of APIUser where .has-role('editor');
+
+my $token;
+
+&routes = {
+    my $store = MemoryStore.new;
+    my $manager = Cro::APIToken::Manager.new(:$store);
+
+    route {
+        get -> 'get-token', 'viewer' {
+            $token = $manager.create-token(metadata => { :user(2), roles => 'viewer' }, lifetime => Duration
+                    .new(30));
+            header 'Authorization', 'Bearer ' ~ $token.token;
+            content 'text/plain', 'done';
+        }
+
+        get -> 'get-token', 'editor' {
+            $token = $manager.create-token(metadata => { :user(1), roles => 'editor' }, lifetime => Duration
+                    .new(30));
+            header 'Authorization', 'Bearer ' ~ $token.token;
+            content 'text/plain', 'done';
+        }
+
+        delegate <blog *> => route {
+            before TestAPIMiddleware.new(:$manager);
+
+            get -> Viewer, 'test' {
+                content 'text/plain', 'viewer';
+            }
+            get -> Editor, 'test' {
+                content 'text/plain', 'editor';
+            }
+        }
+    }
+}
+
+my $http-server = Cro::HTTP::Server.new(host => 'localhost', port => HTTP_TEST_PORT, application => &routes());
+$http-server.start;
+END $http-server.stop;
+
+my $client = Cro::HTTP::Client.new;
+my $base = "http://localhost:{ HTTP_TEST_PORT }";
+
+my $header;
+given await $client.get("$base/get-token/viewer") -> $resp {
+    $header = 'Authorization' => $resp.header('Authorization');
+}
+
+given await $client.get("$base/blog/test", headers => [$header]) -> $resp {
+    is await($resp.body), 'viewer', 'was able to create and access token';
+}
+
+$token.revoke;
+
+throws-like { await $client.get("$base/blog/test", headers => [$header]) },
+    X::Cro::HTTP::Error::Client, 'revoken token does not work anymore', message => /'401'/;
+
+given await $client.get("$base/get-token/editor") -> $resp {
+    $header = 'Authorization' => $resp.header('Authorization');
+}
+
+given await $client.get("$base/blog/test", headers => [$header]) -> $resp {
+    is await($resp.body), 'editor', 'was able to create and access another token';
+}
+
+done-testing;

@@ -1,0 +1,25 @@
+{
+  "name": "Cro::Api::Token",
+  "description": "Eases the implementation of APIs that do auth with API tokens using Cro",
+  "version": "0.1",
+  "perl": "6.*",
+  "authors": [
+    "Write me!"
+  ],
+  "auth": "Write me!",
+  "depends": [
+    "Cro::HTTP",
+    "String::CRC32"
+  ],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "Cro::APIToken::Middleware": "lib/Cro/APIToken/Middleware.pm6",
+    "Cro::APIToken::Store": "lib/Cro/APIToken/Store.pm6",
+    "Cro::APIToken::Token": "lib/Cro/APIToken/Token.pm6",
+    "Cro::APIToken::Manager": "lib/Cro/APIToken/Manager.pm6"
+  },
+  "resources": [],
+  "license": "Artistic-2.0",
+  "source-url": "https://github.com/croservices/cro-apitoken.git"
+}
