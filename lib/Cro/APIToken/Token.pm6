@@ -1,4 +1,5 @@
 class Cro::APIToken::Token {
+    has $.manager;
     has Str $.token;
     has %.metadata;
     has DateTime $.expiration;
@@ -9,6 +10,7 @@ class Cro::APIToken::Token {
     }
 
     method revoke(--> Nil) {
+        $!manager.revoke($!token);
         $!revoked = True;
     }
 

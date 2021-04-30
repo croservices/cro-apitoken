@@ -43,4 +43,8 @@ class Cro::APIToken::Manager {
     method find-tokens(:%metadata, Bool :$expired = False, Bool :$revoked --> Seq) {
         $!store.find-tokens(self, :%metadata, :$expired, :$revoked);
     }
+
+    method revoke($token) {
+        $!store.revoke($token);
+    }
 }

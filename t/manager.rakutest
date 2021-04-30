@@ -8,6 +8,7 @@ use MemoryStore;
 dies-ok { Cro::APIToken::Manager.create-token }, 'Cannot create a token without expiration time specified';
 
 my $manager = Cro::APIToken::Manager.new(store => MemoryStore.new);
+$manager.store.manager = $manager;
 
 my $token = $manager.create-token(:metadata{ user-id => 2 }, lifetime => Duration.new(60));
 
