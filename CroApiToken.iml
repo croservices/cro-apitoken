@@ -177,23 +177,5 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Cro::HTTP::Test" type="perl6">
-        <CLASSES />
-        <JAVADOC />
-        <SOURCES>
-          <root url="raku://1165951844:Cro::HTTP::Test!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Test::Mock" type="perl6">
-        <CLASSES />
-        <JAVADOC />
-        <SOURCES>
-          <root url="raku://1165951844:Test::Mock!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
   </component>
 </module>

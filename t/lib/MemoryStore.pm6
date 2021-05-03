@@ -24,4 +24,6 @@ class MemoryStore does Cro::APIToken::Store {
     method resolve-token(Cro::APIToken::Manager $manager, Str $token --> Cro::APIToken::Token) {
         %!tokens{$token};
     }
+
+    method revoke-token(Cro::APIToken::Token $token) {}
 }

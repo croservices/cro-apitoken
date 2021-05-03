@@ -21,5 +21,6 @@ role Cro::APIToken::Store {
                        Bool :$expired = False, Bool :$revoked --> Seq)
     	{ ... }
 
-    method revoke(Str $token --> Nil) {}
+    #| Revokes a token by its value passed, if present, otherwise does nothing.
+    method revoke-token(Str $token --> Nil) { ... }
 }
