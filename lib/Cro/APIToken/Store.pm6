@@ -22,5 +22,5 @@ role Cro::APIToken::Store {
     	{ ... }
 
     #| Revokes a token by its value passed, if present, otherwise does nothing.
-    method revoke-token(Str $token --> Nil) { ... }
+    method revoke-token(Cro::APIToken::Token $token --> Nil) { ... }
 }

@@ -82,7 +82,7 @@ class Cro::APIToken::Manager {
     #| If the `:expired` option is passed then tokens that have expired will be included
     #| in the results. If the `:revoked` option is passed then tokens that have been explicitly
     #| revoked will also be returned.
-    method find-tokens(:%metadata, Bool :$expired = False, Bool :$revoked --> Seq) {
+    method find-tokens(:%metadata, Bool :$expired = False, Bool :$revoked = True --> Seq) {
         $!store.find-tokens(self, :%metadata, :$expired, :$revoked);
     }
 
