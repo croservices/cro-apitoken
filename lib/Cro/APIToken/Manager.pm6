@@ -4,7 +4,10 @@ use Cro::APIToken::Token;
 use String::CRC32;
 
 role X::Cro::APIToken is Exception {
-    has $.token;
+}
+
+role X::Cro::APIToken::InvalidToken does X::Cro::APIToken {
+    has $.token is required;
 }
 
 class X::Cro::APIToken::AmbiguousExpirationTime does X::Cro::APIToken {
@@ -13,13 +16,13 @@ class X::Cro::APIToken::AmbiguousExpirationTime does X::Cro::APIToken {
     }
 }
 
-class X::Cro::APIToken::TokenIsRevoked does X::Cro::APIToken {
+class X::Cro::APIToken::TokenIsRevoked does X::Cro::APIToken::InvalidToken {
     method message { "Token '$!token' was revoked" }
 }
-class X::Cro::APIToken::TokenHasExpired does X::Cro::APIToken {
+class X::Cro::APIToken::TokenHasExpired does X::Cro::APIToken::InvalidToken {
     method message { "Token '$!token' has expired" }
 }
-class X::Cro::APIToken::TokenNotFound does X::Cro::APIToken {
+class X::Cro::APIToken::TokenNotFound does X::Cro::APIToken::InvalidToken {
     method message { "No token '$!token' found" }
 }
 
