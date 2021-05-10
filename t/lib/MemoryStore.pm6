@@ -4,9 +4,10 @@ use Cro::APIToken::Store;
 
 class MemoryStore does Cro::APIToken::Store {
     has %!tokens;
+    has $.manager is rw;
 
     method create-token(Str $token, DateTime $expiration, %metadata --> Nil) {
-        %!tokens{$token} = Cro::APIToken::Token.new(:$token, :%metadata, :$expiration)
+        %!tokens{$token} = Cro::APIToken::Token.new(:$!manager, :$token, :%metadata, :$expiration)
     }
 
     method find-tokens(Cro::APIToken::Manager $manager, :%metadata,
@@ -23,4 +24,6 @@ class MemoryStore does Cro::APIToken::Store {
     method resolve-token(Cro::APIToken::Manager $manager, Str $token --> Cro::APIToken::Token) {
         %!tokens{$token};
     }
+
+    method revoke-token(Cro::APIToken::Token $token) {}
 }

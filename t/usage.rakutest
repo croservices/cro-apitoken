@@ -35,6 +35,7 @@ my $token;
 &routes = {
     my $store = MemoryStore.new;
     my $manager = Cro::APIToken::Manager.new(:$store);
+    $manager.store.manager = $manager;
 
     route {
         get -> 'get-token', 'viewer' {

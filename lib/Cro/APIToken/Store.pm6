@@ -11,8 +11,7 @@ role Cro::APIToken::Store {
     #| passed as this is required to construct a Cro::APIToken::Token. If there
     #| is a token in the database, return it, regardless of whether it has
     #| expired or been revoked. If there is no matching token, return Nil.
-    method resolve-token(Cro::APIToken::Manager $manager, Str $token -->
-        Cro::APIToken::Token) { ... }
+    method resolve-token(Cro::APIToken::Manager $manager, Str $token --> Cro::APIToken::Token) { ... }
 
     #| Find all matching tokens according to the passed properties. The metadata
     #| to search on should always be top-level keys and match by a direct
@@ -21,4 +20,7 @@ role Cro::APIToken::Store {
     method find-tokens(Cro::APIToken::Manager $manager, :%metadata,
                        Bool :$expired = False, Bool :$revoked --> Seq)
     	{ ... }
+
+    #| Revokes a token by its value passed, if present, otherwise does nothing.
+    method revoke-token(Cro::APIToken::Token $token --> Nil) { ... }
 }
