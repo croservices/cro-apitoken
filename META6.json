@@ -4,9 +4,10 @@
   "version": "0.1",
   "perl": "6.*",
   "authors": [
-    "Write me!"
+    "Alexander Kiryuhin <alexander.kiryuhin@gmail.com>",
+    "Jonathan Worthington <jonathan@edument.cz>"
   ],
-  "auth": "Write me!",
+  "auth": "cpan:JNTHN",
   "depends": [
     "Cro::HTTP",
     "String::CRC32"
