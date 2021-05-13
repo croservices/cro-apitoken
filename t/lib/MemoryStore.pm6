@@ -3,7 +3,7 @@ use Cro::APIToken::Manager;
 use Cro::APIToken::Store;
 
 class MemoryStore does Cro::APIToken::Store {
-    has %!tokens;
+    has Cro::APIToken::Token %!tokens;
     has $.manager is rw;
 
     method create-token(Str $token, DateTime $expiration, %metadata --> Nil) {

@@ -24,7 +24,7 @@ role Cro::APIToken::Middleware does Cro::HTTP::Middleware::Conditional {
             with $token {
                 emit $_ ?? self.on-valid($req, $_) !! self.on-invalid($req, $_);
             } else {
-                emit self.on-invalid($req, $token);
+                emit self.on-invalid($req, Cro::APIToken::Token);
             }
         }
     }

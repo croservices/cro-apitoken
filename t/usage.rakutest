@@ -94,4 +94,14 @@ given await $client.get("$base/blog/test", headers => [$header]) -> $resp {
     is await($resp.body), 'editor', 'was able to create and access another token';
 }
 
+throws-like { await $client.get("$base/blog/test") },
+        X::Cro::HTTP::Error::Client,
+        'Missing token is a a client error',
+         message => /'401'/;
+
+throws-like { await $client.get("$base/blog/test", headers => ['Authorization' => 'Bearer medved']) },
+        X::Cro::HTTP::Error::Client,
+        'Bogus token is a a client error',
+        message => /'401'/;
+
 done-testing;
