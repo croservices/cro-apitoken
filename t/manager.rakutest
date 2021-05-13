@@ -26,4 +26,6 @@ $manager = Cro::APIToken::Manager.new(store => MemoryStore.new, prefix => 'prefi
 
 lives-ok { $manager.create-token(:metadata{ user-id => 2 }, lifetime => Duration.new(60)) }, 'can create a token with a prefix and a checksum';
 
+lives-ok { $manager.create-token(:metadata{ user-id => 2 }) }, 'can create a token without a lifetime or expiration';
+
 done-testing;

@@ -50,7 +50,7 @@ class Cro::APIToken::Manager {
     method create-token(:%metadata, Duration :$lifetime, DateTime :$expiration --> Cro::APIToken::Token) {
         die X::Cro::APIToken::AmbiguousExpirationTime.new if $lifetime && $expiration;
         my $token = self!generate-token();
-        my $expr = $expiration || DateTime.new(now + $lifetime) || Nil;
+        my DateTime $expr = $expiration || $lifetime && DateTime.new(now + $lifetime) || Nil;
         $!store.create-token($token, $expr, %metadata);
         $!store.resolve-token(self, $token);
     }
