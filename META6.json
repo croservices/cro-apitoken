@@ -1,5 +1,5 @@
 {
-  "name": "Cro::Api::Token",
+  "name": "Cro::APIToken",
   "description": "Eases the implementation of APIs that do auth with API tokens using Cro",
   "version": "0.1",
   "perl": "6.*",
